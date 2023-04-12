@@ -1,2 +1,10 @@
 # HAL-9000 Group Final Project - CS4811 S23
+
 This project is a terminal based chatbot meant to help debug code in the style of Rubber Duck debugging
+
+Using some stuff from NLTK, need to run
+
+import nltk
+nltk.download('all')
+
+in a python terminal atm to get it set up
