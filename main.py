@@ -9,6 +9,7 @@ import nltk
 
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.stem import WordNetLemmatizer
+from nltk.corpus import stopwords
 import openai
 
 from collections import Counter
@@ -21,6 +22,7 @@ tagCounts = {}
 training_dict = {}
 prob_dict = {}
 tag_prob = {}
+stop_words = set(stopwords.words("english"))
 
 '''
 This Rubber Duck Bot is a Naive Bayesian Classifier using a little bit of natural language handling to increase accuracy by 
@@ -33,25 +35,34 @@ def train():
     total = 0
     count_dict = {}
     
+    # Issue: the more tags we have, the less likely a given tag is to be "true" overall
     with open('initial_data.csv', mode ='r')as file: 
         lines = file.readlines()
         for line in lines:
             total += 1
-            tag, data = line.split(",", 1) # split only once 
-            tag_counts[tag] += 1              # count number of instances of this tag
+            tag_str, data = line.split(",", 1) # split only once 
+            tags = [tag_str]
+            # tags = tag_str.replace('<', ' ').split(">")
+            # tags = [tag.replace(' ', '') for tag in tags if tag != " " and tag != ""]
+
+            for tag in tags:
+                tag_counts[tag] += 1              # count number of instances of this tag
             
             if "." in data:
                 data, _ = data.split(".", 1)
                 
             words = word_tokenize(data.lower())
+            words = [word for word in words if word not in stop_words]
             lemmatized_words = [lemmatizer.lemmatize(word) for word in words] 
             for word in set(lemmatized_words):
                 trainingWords.add(word)
                 # init counters
-                if tag not in count_dict:
-                    count_dict[tag] = Counter()
+                for tag in tags:
+                    if tag not in count_dict:
+                        count_dict[tag] = Counter()
                 
-                count_dict[tag][word] += 1
+                for tag in tags:
+                    count_dict[tag][word] += 1
 
     for tag, counter in count_dict.items():
         training_dict[tag] = {}
@@ -76,7 +87,9 @@ def process_message(input):
 
     total = sum(prod.values())
     probabilities = [(prod[tag] / total, tag) for tag in prod.keys()]
-    print(probabilities)
+    if len(probabilities) == 0:
+        prinf("None found")
+        return
     probability, selected = max(probabilities, key=lambda item:item[0])
     print(f'{selected} is the tag for the message, probaility is {probability}')
 
@@ -105,6 +118,7 @@ def main():
             continue
 
         words = word_tokenize(user_in)
+        words = [word for word in words if word not in stop_words]
         tagged_words = nltk.pos_tag(words)
         # lemmatized_words = [lemmatizer.lemmatize(word, pos=pos_map[part]) for (word, part) in tagged_words]
         lemmatized_words = [lemmatizer.lemmatize(word) for (word, part) in tagged_words] 
