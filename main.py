@@ -42,9 +42,7 @@ def train():
         for line in lines:
             total += 1
             tag_str, data = line.split(",", 1) # split only once 
-            tags = [tag_str]
-            # tags = tag_str.replace('<', ' ').split(">")
-            # tags = [tag.replace(' ', '') for tag in tags if tag != " " and tag != ""]
+            tags = [tag_str] # this is a remnent from a multi-tagging expirament. I am leaving it like this in case we return to that
 
             for tag in tags:
                 tag_counts[tag] += 1              # count number of instances of this tag
@@ -157,7 +155,7 @@ def main():
                 print("> Quack quack")
             continue
 
-        if "quit" in words or "exit" in lemmatized_words:
+        if ("quit" in lemmatized_words or "exit" in lemmatized_words) and len(lemmatized_words) == 1:
             finished = True
             break
 
