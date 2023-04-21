@@ -1,6 +1,7 @@
 import random
 import nltk
 from os.path import exists
+from subprocess import call
 
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.stem import WordNetLemmatizer
@@ -107,7 +108,6 @@ def train():
 
 def process_message(input):
     prod = {}
-
     for tag, prob in tag_prob.items():
         for word in input:
             if tag not in prod.keys():
@@ -146,14 +146,23 @@ def main():
     else:
         train()
 
-    print("> Alright, I am ready to listen!")
+    print("> Alright, I am ready to listen!\n")
     finished = False
     while not finished:
-        user_in = input()
+        
+        user_in = input(">")
 
         if (random.random() < 0.05):
             print("Quack!!")
             continue
+        
+        if len(user_in) == 0:
+            continue
+        
+        if user_in == "clear" or user_in == "Clear" or user_in == "c":
+            call("clear")
+            continue
+        
 
         lemmatized_words = process_input(user_in.lower())
         output = process_message(lemmatized_words)
