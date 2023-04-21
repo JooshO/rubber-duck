@@ -124,7 +124,7 @@ def process_message(input):
     total = sum(prod.values())
     probabilities = [(prod[tag] / total, tag) for tag in prod.keys()]
     if len(probabilities) == 0:
-        prinf("None found")
+        print("None found")
         return
     probability, selected = max(probabilities, key=lambda item: item[0])
     # print(f'{selected} is the tag for the message, probaility is {probability}')
