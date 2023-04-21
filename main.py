@@ -184,7 +184,7 @@ def main():
             print("> If you are working on a concurrent application it could be deadlock, try looking at where you wait/signal or unlock/lock.")
             print("> Let me know if you would like to go over code!")
         elif output == "crash":
-            print("> It sounds like your code project is crashing.")
+            print("> It sounds like your project is crashing.")
             print("> If you have an error message, it is always a good idea to look it up and check what line number it references to see if the issue is a quick fix.")
             print("> If you are working in C/C++, consider running your code through Valgrind or another debugging tool to get more information.")
             print("> Let me know if you would like to go over code!")
@@ -192,6 +192,11 @@ def main():
             print("> It sounds like you are stuck with your project and might be frustrated.")
             print("> If you are allowed to talk to other people, an open-hands discussion with your friends might help kickstart some ideas.")
             print("> It might also be a good idea to take a break. Try going for a walk or talking to friends to let your brain relax and come back with fresh eyes.")
+            print("> Let me know if you would like to go over code!")
+        elif output == "databases":
+            print("> It sounds like your problem involves database.")
+            print("> If your issue is with a query, I always recommend breaking it up into smaller pieces and making sure everything works as expected.")
+            print("> There are lot of great resources online to help with syntax as well, I personally recommend W3Schools.")
             print("> Let me know if you would like to go over code!")
         else:
             print("> Unfortuanately, I don't have any good advice for that kind of problem (or I misunderstood).")

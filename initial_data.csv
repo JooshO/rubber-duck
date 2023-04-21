@@ -131,5 +131,25 @@ end_review, I have solved the problem.
 end_review, I understand why it's doing that
 end_review, I see what the issue is
 end_review, I fixed the error
-end_review, Oh, thank you I see what the problem was
+end_review, Oh thank you I see what the problem was
 code_review, I would like to go over the code with you
+databases,How do I connect to a database in my program?
+databases,How can I delete data from a database using SQL?
+databases,How can I insert data into a database using sql?
+databases,I am getting a syntax error while using SQL, what does this mean? 
+databases,I am getting a constraint error while using SQL, what does this mean? 
+databases,I want to optimize my database preformance. How do I do that?
+databases,How can I test my database to make sure that it is functioning correctly
+databases,I am getting a constraint violation error message. Why am I getting this? 
+databases,My sql query is not producing any results 
+databases,Why is my query not working as expected when I did not get any errors?
+databases,I need help debugging a project for my databases class
+databases,Why do I keep getting the wrong results from a query 
+databases,My query is taking forever to return results 
+databases,What is a database schema?
+databases,How do I know if I have any security issues with my database 
+databases,I need help with an issue I am having with an sql query 
+databases,what does select * mean 
+databases,what is wrong with this query "SELECT * IN customers" 
+databases,how to look for columns of data with an SQL query 
+databases,sql is hard what else can I use in my databases class 
