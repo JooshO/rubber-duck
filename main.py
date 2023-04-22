@@ -1,6 +1,7 @@
 import random
 import nltk
 from os.path import exists
+from subprocess import call
 
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.stem import WordNetLemmatizer
@@ -25,8 +26,10 @@ Worked on by Team HAL-9000 for CS4811 S23
 '''
 
 training_words = set()                          # set of words we read
-training_dict = {}                              # dictionary we use to store training data
-tag_prob = {}                                   # dictionary for individual tag probabilities
+# dictionary we use to store training data
+training_dict = {}
+# dictionary for individual tag probabilities
+tag_prob = {}
 stop_words = set(stopwords.words("english"))    # stop words for filtering
 lemmatizer = WordNetLemmatizer()
 
@@ -57,7 +60,8 @@ def process_input(input):
     words = [word for word in words if word not in stop_words]
     tagged_words = nltk.pos_tag(words)
     wordnet_tagged = map(lambda x: (x[0], nltk_pos_tagger(x[1])), tagged_words)
-    lemmatized_words = [lemmatizer.lemmatize(word, pos=part) if part is not None else lemmatizer.lemmatize(word) for (word, part) in wordnet_tagged]
+    lemmatized_words = [lemmatizer.lemmatize(word, pos=part) if part is not None else lemmatizer.lemmatize(
+        word) for (word, part) in wordnet_tagged]
     return lemmatized_words
 
 
@@ -75,9 +79,11 @@ def train():
         lines = file.readlines()
         for line in lines:
             total += 1
-            tag, data = line.split(",", 1)  # split only once - we don't want to lose things after commas
+            # split only once - we don't want to lose things after commas
+            tag, data = line.split(",", 1)
 
-            tag_counts[tag] += 1            # count number of instances of this tag
+            # count number of instances of this tag
+            tag_counts[tag] += 1
 
             # Only pay attention to the first sentance. The second one in training data does little for us usually
             if "." in data:
@@ -117,7 +123,6 @@ def process_message(input):
     process a user input and spit back the tag that should be attached to it
     '''
     prod = {}   # product dictionary - keys are tags, values are products for calculation
-
     # Standard bayes network calculation
     for tag, prob in tag_prob.items():
         for word in input:
@@ -139,7 +144,7 @@ def process_message(input):
 
     # if no tag is an option, report that
     if len(probabilities) == 0:
-        prinf("None found")
+        print("None found")
         return
 
     # find the most likely tag
@@ -167,13 +172,21 @@ def main():
     else:
         train()
 
-    print("> Alright, I am ready to listen!")
+    print("> Alright, I am ready to listen!\n")
     finished = False
     while not finished:
-        user_in = input()
+
+        user_in = input(">")
 
         if (random.random() < 0.05):
             print("Quack!!")
+            continue
+
+        if len(user_in) == 0:
+            continue
+
+        if user_in == "clear" or user_in == "Clear" or user_in == "c":
+            call("clear")
             continue
 
         lemmatized_words = process_input(user_in.lower())
@@ -184,7 +197,8 @@ def main():
                 reviewing = False
                 # todo: different tags for solved and not solved.
                 print("> I hope I was able to assist in solving your problem!")
-                print("> If not, you can try reaching out to your TA or professor, or try visiting the CCLC in Rekhi hall!")
+                print(
+                    "> If not, you can try reaching out to your TA or professor, or try visiting the CCLC in Rekhi hall!")
             else:
                 print("> Quack quack")
         elif ("quit" in lemmatized_words or "exit" in lemmatized_words) and len(lemmatized_words) == 1:
@@ -192,16 +206,19 @@ def main():
             break
         elif output == "code_review":
             print("> Feel free to start typing your code in! \n> Remember that copying and pasting will be less effective for you than retyping the code.")
-            print("> I'll stay out of the way as you type, until you let me know that you are done!")
+            print(
+                "> I'll stay out of the way as you type, until you let me know that you are done!")
             reviewing = True
         elif output == "loop":
             print("> It sounds like you are having an issue with a loop.")
             print("> It's always a good idea to take a closer loop at your loop conditions and what can cause you to break out of a loop.")
-            print("> So try looking at breaks and continues, and check where you change your loop condition.")
+            print(
+                "> So try looking at breaks and continues, and check where you change your loop condition.")
             print("> Let me know if you would like to go over code!")
         elif output == "hanging":
             print("> It sounds like your code is getting stuck somewhere or hanging.")
-            print("> That is often caused by an infinite loop or waiting for input in some way.")
+            print(
+                "> That is often caused by an infinite loop or waiting for input in some way.")
             print("> If you are working on a concurrent application it could be deadlock, try looking at where you wait/signal or unlock/lock.")
             print("> Let me know if you would like to go over code!")
         elif output == "crash":
@@ -210,7 +227,8 @@ def main():
             print("> If you are working in C/C++, consider running your code through Valgrind or another debugging tool to get more information.")
             print("> Let me know if you would like to go over code!")
         elif output == "stuck":
-            print("> It sounds like you are stuck with your project and might be frustrated.")
+            print(
+                "> It sounds like you are stuck with your project and might be frustrated.")
             print("> If you are allowed to talk to other people, an open-hands discussion with your friends might help kickstart some ideas.")
             print("> It might also be a good idea to take a break. Try going for a walk or talking to friends to let your brain relax and come back with fresh eyes.")
             print("> Let me know if you would like to go over code!")
@@ -220,8 +238,10 @@ def main():
             print("> There are lot of great resources online to help with syntax as well, I personally recommend W3Schools.")
             print("> Let me know if you would like to go over code!")
         else:
-            print("> Unfortuanately, I don't have any good advice for that kind of problem (or I misunderstood).")
-            print("> I can still take a look at your code happily, or you can try to rephrase the question.")
+            print(
+                "> Unfortuanately, I don't have any good advice for that kind of problem (or I misunderstood).")
+            print(
+                "> I can still take a look at your code happily, or you can try to rephrase the question.")
             print("> Let me know if you would like to go over code!")
 
     print("> Good bye!")
