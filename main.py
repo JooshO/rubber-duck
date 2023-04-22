@@ -15,8 +15,15 @@ import csv
 This Rubber Duck Bot is a Naive Bayesian Classifier using a little bit of
 natural language processing from NLTK to increase accuracy by
 reducing variety of words.
+
+The skeleton of the code comes from the in-class Bayesnian Network activity.
+The general design and implementation of the code was worked on by Josh Overbeek.
+The dataset was contributed to by everybody in the group.
+The paper, not found in this repo, was also everybody's responsibility
+
 Worked on by Team HAL-9000 for CS4811 S23
 '''
+
 training_words = set()                          # set of words we read
 training_dict = {}                              # dictionary we use to store training data
 tag_prob = {}                                   # dictionary for individual tag probabilities
@@ -106,8 +113,12 @@ def train():
 
 
 def process_message(input):
-    prod = {}
+    '''
+    process a user input and spit back the tag that should be attached to it
+    '''
+    prod = {}   # product dictionary - keys are tags, values are products for calculation
 
+    # Standard bayes network calculation
     for tag, prob in tag_prob.items():
         for word in input:
             if tag not in prod.keys():
@@ -122,11 +133,20 @@ def process_message(input):
             prod[tag] *= prob
 
     total = sum(prod.values())
+
+    # calculate the tags and their probabilities
     probabilities = [(prod[tag] / total, tag) for tag in prod.keys()]
+
+    # if no tag is an option, report that
     if len(probabilities) == 0:
         prinf("None found")
         return
+
+    # find the most likely tag
     probability, selected = max(probabilities, key=lambda item: item[0])
+
+    # debugging print message for checking classification
+    # commented out for user experience
     # print(f'{selected} is the tag for the message, probaility is {probability}')
     return selected
 
@@ -135,8 +155,9 @@ def main():
     global tag_prob
     global training_dict
 
-    reviewing = False
+    reviewing = False       # whether we are in review mode
 
+    # Either load our dictionaries from files, or train
     if exists('tagprob.pkl') and exists('training_dict.pkl'):
         with open('tagprob.pkl', 'rb') as f:
             tag_prob = pickle.load(f)
